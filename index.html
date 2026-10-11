@@ -134,9 +134,8 @@
       <p class="badge inline-block px-4 py-1.5 mb-5 font-display">A LITTLE QUESTION · 小小的问题</p>
 
       <div class="mx-auto mb-6 w-56 h-56 sm:w-64 sm:h-64 rounded-3xl overflow-hidden border" style="border-color:var(--border);">
-        <img id="moodImg" src="cat-1.jpg" alt="แมวส้มทำตาอ้อน" class="w-full h-full object-cover">
-        <video id="moodVideo" class="w-full h-full object-cover hidden" src="cat-3.mp4" poster="cat-3-poster.jpg"
-               autoplay loop muted playsinline aria-label="ลูกแมวยืนขอ"></video>
+        <video id="moodVideo" class="w-full h-full object-cover" src="cat-1.mp4" poster="cat-1.jpg"
+               autoplay loop muted playsinline aria-label="แมวส้มทำตาอ้อนกระพริบตา"></video>
       </div>
 
       <h1 class="font-thai-serif text-3xl sm:text-4xl font-semibold leading-snug mb-2">ขอจีบเธอได้มั้ย? ♡</h1>
@@ -156,7 +155,7 @@
     <section id="state-yes" class="fade hidden-state" aria-label="ตอบตกลง">
       <p class="badge inline-block px-4 py-1.5 mb-5 font-display">YAY, IT'S A YES · 太好了</p>
       <div class="mx-auto mb-6 w-56 h-56 sm:w-64 sm:h-64 rounded-3xl overflow-hidden border" style="border-color:var(--border);">
-        <img src="cat-4.jpg" alt="แมวส้มนอนฟินอย่างมีความสุข" class="w-full h-full object-cover">
+        <img src="cat-4.gif" alt="แมวส้มดีใจเคาะกลอง" class="w-full h-full object-cover">
       </div>
       <h1 class="font-thai-serif text-3xl sm:text-4xl font-semibold leading-snug mb-2">เย! งั้นเริ่มจีบเลยนะ ♡</h1>
       <p class="font-cn text-lg mb-2" style="color:var(--red);">好!那我们开始吧</p>
@@ -228,14 +227,13 @@
 
   /* ---- pleading sequence (static buttons, respectful: No always works) ---- */
   var steps = [
-    { img:"cat-2.jpg", video:false, th:"ลองคิดดูอีกนิดนะ", cn:"再考虑一下嘛" },
-    { img:null,        video:true,  th:"นะๆ ใจดีหน่อย", cn:"拜托拜托" },
-    { img:"cat-2.jpg", video:false, th:"ครั้งสุดท้ายแล้ว ถามจริงๆ", cn:"最后一次，认真的" }
+    { src:"cat-2.mp4", poster:"cat-2-poster.jpg", th:"ลองคิดดูอีกนิดนะ", cn:"再考虑一下嘛" },
+    { src:"cat-3.mp4", poster:"cat-3-poster.jpg", th:"นะๆ ใจดีหน่อย", cn:"拜托拜托" },
+    { src:"cat-2.mp4", poster:"cat-2-poster.jpg", th:"ครั้งสุดท้ายแล้ว ถามจริงๆ", cn:"最后一次，认真的" }
   ];
   var idx = 0;
   var yesBtn = document.getElementById("yesBtn");
   var noBtn = document.getElementById("noBtn");
-  var moodImg = document.getElementById("moodImg");
   var moodVideo = document.getElementById("moodVideo");
   var pleadText = document.getElementById("pleadText");
   var pleadCn = document.getElementById("pleadCn");
@@ -244,8 +242,9 @@
   noBtn.addEventListener("click", function(){
     if(idx < steps.length){
       var s = steps[idx++];
-      if(s.video){ moodImg.classList.add("hidden"); moodVideo.classList.remove("hidden"); if(reduceMotion){ moodVideo.pause(); } else { moodVideo.play().catch(function(){}); } }
-      else{ moodVideo.classList.add("hidden"); moodImg.classList.remove("hidden"); moodImg.src = s.img; }
+      moodVideo.poster = s.poster;
+      if(moodVideo.getAttribute("src") !== s.src){ moodVideo.setAttribute("src", s.src); moodVideo.load(); }
+      if(reduceMotion){ moodVideo.pause(); } else { moodVideo.play().catch(function(){}); }
       pleadText.textContent = s.th;
       pleadCn.textContent = s.cn;
       yesScale = Math.min(yesScale + 0.08, 1.4);
@@ -259,7 +258,9 @@
   /* ---- restart ---- */
   function reset(){
     idx = 0; yesScale = 1; yesBtn.style.transform = "";
-    moodVideo.classList.add("hidden"); moodImg.classList.remove("hidden"); moodImg.src = "cat-1.jpg";
+    moodVideo.poster = "cat-1.jpg";
+    if(moodVideo.getAttribute("src") !== "cat-1.mp4"){ moodVideo.setAttribute("src", "cat-1.mp4"); moodVideo.load(); }
+    if(!reduceMotion){ moodVideo.play().catch(function(){}); }
     pleadText.textContent = "ไม่ได้อยากรีบร้อน แค่อยากค่อยๆ ทำความรู้จักเธอให้มากขึ้น";
     pleadCn.textContent = "不想着急，只想慢慢认识你";
     show("main");
