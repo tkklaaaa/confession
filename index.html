@@ -219,20 +219,19 @@
     else{ bgm.pause(); musicOn = false; document.body.classList.remove("music-on"); musicBtn.textContent = "♪ เพลง: ปิด"; musicBtn.setAttribute("aria-pressed","false"); }
   });
 
-  /* ---- discord notify: paste your webhook URL between the quotes ----
-     (Discord channel > Edit channel > Integrations > Webhooks > New Webhook > Copy URL)
-     Leave empty to disable. Note: this URL is visible in page source,
-     so only share the link with her, and expect possible spam from others. */
-  var WEBHOOK_URL = "https://discord.com/api/webhooks/1558921595936833659/bYi8I8GJOEP9dtRa2eSj9vICrCwqifPnft7AlsHcRYWDC3j3DC4FE8Y2GOek42lK1cba";
+  /* ---- discord notify via same-origin proxy (api/notify.js).
+     The real webhook URL lives only in the Vercel env var DISCORD_WEBHOOK_URL
+     and is never committed to the repo. Sends once per answer per visit. */
+  var NOTIFY_URL = "/api/notify";
   var notified = {};
   function notify(choice){
-    if(!WEBHOOK_URL || notified[choice]) return;
+    if(notified[choice]) return;
     notified[choice] = true;
-    fetch(WEBHOOK_URL, {
+    fetch(NOTIFY_URL, {
       method:"POST",
       headers:{ "Content-Type":"application/json" },
-      body: JSON.stringify({ content:"มีคนกด \"" + choice + "\" ในเว็บขอจีบ 💌 (" + new Date().toLocaleString("th-TH") + ")" })
-    }).catch(function(){ /* offline or blocked — site still works */ });
+      body: JSON.stringify({ choice: choice })
+    }).catch(function(){ /* no backend (local file / GitHub Pages) — site still works */ });
   }
   /* ---- gate ---- */
   document.getElementById("openBtn").addEventListener("click", function(){
