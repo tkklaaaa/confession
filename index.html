@@ -78,19 +78,24 @@
   .cloud{ color:var(--gold-soft); opacity:.55; }
   #confetti{ position:fixed; inset:0; pointer-events:none; z-index:50; }
   .music-credit{ display:flex; align-items:center; justify-content:center; gap:.5rem; }
-  .disc{
-    width:26px; height:26px; border-radius:999px; flex:none;
-    display:inline-flex; align-items:center; justify-content:center;
-    font-size:.8rem; color:#FBF3E4;
-    background:radial-gradient(circle at center, var(--gold) 0 3px, var(--ink) 4px);
-    border:1px solid var(--gold-soft);
-    animation:spin 3s linear infinite;
+  .eq{ display:inline-flex; align-items:flex-end; gap:2px; height:18px; flex:none; }
+  .eq i{
+    width:3px; border-radius:2px; background:var(--ink); opacity:.8;
+    height:30%; transform-origin:bottom;
+    animation:eqBounce 1s ease-in-out infinite;
+    animation-play-state:paused;
   }
-  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .eq i:nth-child(1){ animation-delay:-.2s; }
+  .eq i:nth-child(2){ animation-delay:-.6s; }
+  .eq i:nth-child(3){ animation-delay:0s; }
+  .eq i:nth-child(4){ animation-delay:-.4s; }
+  .eq i:nth-child(5){ animation-delay:-.8s; }
+  body.music-on .eq i{ animation-play-state:running; }
+  @keyframes eqBounce{ 0%,100%{ height:25%; } 50%{ height:100%; } }
   @media (prefers-reduced-motion: reduce){
     .fade{ transition:none; }
     .btn-yes, .btn-no{ transition:none; }
-    .disc{ animation:none; }
+    .eq i{ animation:none; }
   }
 </style>
 </head>
@@ -172,7 +177,7 @@
     </section>
 
   </div>
-  <p class="music-credit text-center text-xs mt-4 opacity-70"><span class="disc" aria-hidden="true">♪</span> Guzheng Morning by Antti Luode (CC BY 3.0)</p>
+  <p class="music-credit text-center text-xs mt-4 opacity-70"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span> Guzheng Morning by Antti Luode (CC BY 3.0)</p>
 </main>
 
 <audio id="bgm" src="bgm.mp3" loop preload="none"></audio>
@@ -206,13 +211,13 @@
     if(musicOn) return;
     var p = bgm.play();
     if(p && p.then){
-      p.then(function(){ musicOn = true; musicBtn.classList.remove("hidden"); musicBtn.setAttribute("aria-pressed","true"); })
+      p.then(function(){ musicOn = true; document.body.classList.add("music-on"); musicBtn.classList.remove("hidden"); musicBtn.setAttribute("aria-pressed","true"); })
        .catch(function(){ /* no bgm.mp3 yet — stay silent */ });
     }
   }
   musicBtn.addEventListener("click", function(){
-    if(!musicOn){ bgm.play().then(function(){ musicOn = true; musicBtn.textContent = "♪ เพลง: เปิด"; musicBtn.setAttribute("aria-pressed","true"); }).catch(function(){}); }
-    else{ bgm.pause(); musicOn = false; musicBtn.textContent = "♪ เพลง: ปิด"; musicBtn.setAttribute("aria-pressed","false"); }
+    if(!musicOn){ bgm.play().then(function(){ musicOn = true; document.body.classList.add("music-on"); musicBtn.textContent = "♪ เพลง: เปิด"; musicBtn.setAttribute("aria-pressed","true"); }).catch(function(){}); }
+    else{ bgm.pause(); musicOn = false; document.body.classList.remove("music-on"); musicBtn.textContent = "♪ เพลง: ปิด"; musicBtn.setAttribute("aria-pressed","false"); }
   });
 
   /* ---- gate ---- */
