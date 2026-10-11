@@ -219,6 +219,21 @@
     else{ bgm.pause(); musicOn = false; document.body.classList.remove("music-on"); musicBtn.textContent = "♪ เพลง: ปิด"; musicBtn.setAttribute("aria-pressed","false"); }
   });
 
+  /* ---- discord notify: paste your webhook URL between the quotes ----
+     (Discord channel > Edit channel > Integrations > Webhooks > New Webhook > Copy URL)
+     Leave empty to disable. Note: this URL is visible in page source,
+     so only share the link with her, and expect possible spam from others. */
+  var WEBHOOK_URL = "";
+  var notified = {};
+  function notify(choice){
+    if(!WEBHOOK_URL || notified[choice]) return;
+    notified[choice] = true;
+    fetch(WEBHOOK_URL, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({ content:"มีคนกด \"" + choice + "\" ในเว็บขอจีบ 💌 (" + new Date().toLocaleString("th-TH") + ")" })
+    }).catch(function(){ /* offline or blocked — site still works */ });
+  }
   /* ---- gate ---- */
   document.getElementById("openBtn").addEventListener("click", function(){
     startMusic();
@@ -253,10 +268,11 @@
       noScale = Math.max(noScale - 0.05, 0.85);
       noBtn.style.transform = "scale(" + noScale + ")";
     }else{
+      notify("ปฏิเสธ 4 ครั้ง 🥲");
       show("no"); // 4th No -> graceful acceptance, never trapped
     }
   });
-  yesBtn.addEventListener("click", function(){ show("yes"); });
+  yesBtn.addEventListener("click", function(){ notify("ตกลง 💖"); show("yes"); });
 
   /* ---- restart ---- */
   function reset(){
