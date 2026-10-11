@@ -145,7 +145,7 @@
         <p id="pleadCn" class="font-cn opacity-60 text-sm mb-7">不想着急，只想慢慢认识你</p>
       </div>
 
-      <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
+      <div class="flex flex-col sm:flex-row gap-5 justify-center items-center">
         <button id="yesBtn" class="btn-yes rounded-2xl px-10 py-4 text-lg font-medium w-full sm:w-auto">จีบหน่อยได้ ♡</button>
         <button id="noBtn" class="btn-no rounded-2xl px-10 py-4 text-lg w-full sm:w-auto">ไม่ให้จีบ</button>
       </div>
@@ -238,6 +238,7 @@
   var pleadText = document.getElementById("pleadText");
   var pleadCn = document.getElementById("pleadCn");
   var yesScale = 1;
+  var noScale = 1;
 
   noBtn.addEventListener("click", function(){
     if(idx < steps.length){
@@ -247,8 +248,10 @@
       if(reduceMotion){ moodVideo.pause(); } else { moodVideo.play().catch(function(){}); }
       pleadText.textContent = s.th;
       pleadCn.textContent = s.cn;
-      yesScale = Math.min(yesScale + 0.08, 1.4);
+      yesScale = Math.min(yesScale + 0.06, 1.2);
       yesBtn.style.transform = "scale(" + yesScale + ")";
+      noScale = Math.max(noScale - 0.05, 0.85);
+      noBtn.style.transform = "scale(" + noScale + ")";
     }else{
       show("no"); // 4th No -> graceful acceptance, never trapped
     }
@@ -257,7 +260,7 @@
 
   /* ---- restart ---- */
   function reset(){
-    idx = 0; yesScale = 1; yesBtn.style.transform = "";
+    idx = 0; yesScale = 1; noScale = 1; yesBtn.style.transform = ""; noBtn.style.transform = "";
     moodVideo.poster = "cat-1.jpg";
     if(moodVideo.getAttribute("src") !== "cat-1.mp4"){ moodVideo.setAttribute("src", "cat-1.mp4"); moodVideo.load(); }
     if(!reduceMotion){ moodVideo.play().catch(function(){}); }
