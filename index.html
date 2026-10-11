@@ -77,9 +77,20 @@
   .shown-state{ opacity:1; transform:none; position:relative; }
   .cloud{ color:var(--gold-soft); opacity:.55; }
   #confetti{ position:fixed; inset:0; pointer-events:none; z-index:50; }
+  .music-credit{ display:flex; align-items:center; justify-content:center; gap:.5rem; }
+  .disc{
+    width:26px; height:26px; border-radius:999px; flex:none;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:.8rem; color:#FBF3E4;
+    background:radial-gradient(circle at center, var(--gold) 0 3px, var(--ink) 4px);
+    border:1px solid var(--gold-soft);
+    animation:spin 3s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
   @media (prefers-reduced-motion: reduce){
     .fade{ transition:none; }
     .btn-yes, .btn-no{ transition:none; }
+    .disc{ animation:none; }
   }
 </style>
 </head>
@@ -161,8 +172,7 @@
     </section>
 
   </div>
-  <p class="text-center text-xs mt-4 opacity-50 font-display tracking-widest">MADE WITH CARE · 用心制作</p>
-  <p class="text-center text-xs mt-1 opacity-40">♪ Guzheng Morning by Antti Luode (CC BY 3.0)</p>
+  <p class="music-credit text-center text-xs mt-4 opacity-70"><span class="disc" aria-hidden="true">♪</span> Guzheng Morning by Antti Luode (CC BY 3.0)</p>
 </main>
 
 <audio id="bgm" src="bgm.mp3" loop preload="none"></audio>
